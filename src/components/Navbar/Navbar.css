@@ -1,0 +1,47 @@
+.nav-link.active {
+    border-bottom: 1px solid red;
+}
+
+/* Extra small devices (portrait phones) */
+@media (max-width: 991.98px) {
+    .container {
+        font-size: 1.1rem;
+    }
+
+    /* Custom width for offcanvas */
+    .offcanvas.offcanvas-end {
+        width: 45%;
+        /* Set your desired width here */
+    }
+
+    .nav-link {
+        border-bottom: 1px solid white;
+    }
+
+    .navbar-brand {
+        font-size: 1.45rem;
+    }
+}
+
+/* Large devices (desktops) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .container {
+        font-size: 1.1rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.45rem;
+    }
+
+}
+
+/* Extra large devices (large desktops) */
+@media (min-width: 1200px) {
+    .container {
+        font-size: 1.15rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.5rem;
+    }
+}
