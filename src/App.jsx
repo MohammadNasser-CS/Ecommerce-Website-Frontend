@@ -1,7 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './App.css'
 import Home from './pages/Home/Home';
-import About from './pages/About/About';
 import Root from './Routes/Root';
 import Profile from './pages/Profile/Profile';
 import NotFound from './pages/NotFound/NotFound';
@@ -21,13 +20,6 @@ const router = createBrowserRouter([
         element:
           <ProtectedRoutes>
             <Home />
-          </ProtectedRoutes>,
-      },
-      {
-        path: "/about",
-        element:
-          <ProtectedRoutes>
-            <About />
           </ProtectedRoutes>,
       },
       {

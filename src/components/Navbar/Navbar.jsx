@@ -34,9 +34,6 @@ export default function Navbar() {
                       <NavLink className="nav-link text-white" to="/">Home</NavLink>
                     </li>
                     <li className="nav-item">
-                      <NavLink className="nav-link text-white" to="/about">About</NavLink>
-                    </li>
-                    <li className="nav-item">
                       <NavLink className="nav-link text-white" to="/profile">Profile</NavLink>
                     </li>
                     <li className="nav-item">
