@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import Loader from '../../../Components/loader/Loader';
+import Loader from 'src/components/Loader/Loader.jsx';
 
 export default function Products() {
   const [products, setProducts] = useState([]);
