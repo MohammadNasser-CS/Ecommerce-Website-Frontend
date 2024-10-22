@@ -38,7 +38,9 @@ export default function Navbar() {
                     <li className="nav-item">
                       <NavLink className="nav-link text-white" to="/profile">Profile</NavLink>
                     </li>
-
+                    <li className="nav-item">
+                      <button className="nav-link text-white" onClick={logout}>Logout</button>
+                    </li>
                   </> : userRole === "Admin" ? <>
                     <li className="nav-item">
                       <NavLink className="nav-link text-white" aria-current="page" to="/admin/products">
@@ -60,6 +62,9 @@ export default function Navbar() {
                         Profile
                       </NavLink>
                     </li>
+                    <li className="nav-item">
+                      <button className="nav-link text-white" onClick={logout}>Logout</button>
+                    </li>
                   </> :
                     <>
                       <li className="nav-item ">
@@ -69,9 +74,7 @@ export default function Navbar() {
                         <NavLink className="nav-link text-white" to="/signup">Signup</NavLink>
                       </li>
                     </>}
-                <li className="nav-item">
-                  <button className="nav-link text-white" onClick={logout}>Logout</button>
-                </li>
+
               </ul>
             </div>
           </div>
