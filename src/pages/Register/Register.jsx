@@ -1,89 +1,104 @@
 import axios from "axios";
 import './Register.css'
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Slide, toast } from "react-toastify";
-import * as Yub from 'yup';
+import * as Yup from 'yup';
+import { useFormik } from "formik";
 export default function Register() {
-    const [user, setUser] = useState({
-        userName: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-    });
-    const [errors, setErrors] = useState([]);
     const [loader, setLoader] = useState(false);
     const navigate = useNavigate();
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setUser({ ...user, [name]: value })
-    }
-    const validateData = async () => {
-        const requsetSchema = Yub.object({
-            userName: Yub.string().min(5).max(20).required(),
-            email: Yub.string().email().required(),
-            password: Yub.string().min(3).max(15).required(),
-            image: Yub.string().required(),
-            confirmPassword: Yub.string()
-                .oneOf([Yub.ref('password'), null], 'Passwords must match') // Ensure password confirmation
-                .required('Confirm password is required'),
-        });
-        try {
-            await requsetSchema.validate(user, { abortEarly: false, });
-            setErrors({});  // Clear any existing errors
-            return true;
-        } catch (error) {
-            const validationErrors = {};
-            error.inner.forEach(err => {
-                validationErrors[err.path] = err.message;
-            });
-            setErrors(validationErrors);
-            setLoader(false);
-            return false;
-        }
-    }
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const validationSchema = Yup.object({
+        userName: Yup.string()
+            .min(3, "Must be at least 3 characters")
+            .max(20, "Must be 20 characters or less")
+            .required("User Name is required"),
+        firstName: Yup.string()
+            .min(3, "Must be at least 3 characters")
+            .max(20, "Must be 20 characters or less")
+            .required("First Name is required"),
+        lastName: Yup.string()
+            .min(3, "Must be at least 3 characters")
+            .max(20, "Must be 20 characters or less")
+            .required("Last Name is required"),
+        email: Yup.string()
+            .email("Invalid email address")
+            .required("Email is required"),
+        password: Yup.string()
+            .min(8, "Password must be at least 8 characters")
+            .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+            .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+            .matches(/[0-9]/, "Password must contain at least one number")
+            .matches(
+                /[!@#$%^&*(),.?":{}|<>]/,
+                "Password must contain at least one special character"
+            )
+            .required("Password is required"),
+    });
+
+    const handleForm = async (values) => {
         setLoader(true);
-        if (await validateData()) {
-            const formData = new FormData();
-            formData.append('userName', user.userName);
-            formData.append('email', user.email);
-            formData.append('password', user.password);
-            formData.append('image', user.image);
-            try {
-                const { data } = axios.post(`${import.meta.env.VITE_API_URL}/auth/signup`, formData);
-                if (data.message === 'success') {
-                    toast.success('Account Created Successfully', {
-                        position: "top-right",
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "light",
-                        transition: Slide,
-                    });
-                    navigate("/login");
+        try {
+            await axios.post(
+                "https://ecommercent.runasp.net/api/User/register",
+                {
+                    userName: values.userName,
+                    firstName: values.firstName,
+                    lastName: values.lastName,
+                    email: values.email,
+                    password: values.password,
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
                 }
-            } catch (error) {
-                toast.error(error.response.data.message, {
-                    position: "top-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                    transition: Slide,
-                });
-            } finally {
-                setLoader(false);
-            }
+            );
+            toast.success('Account Created Successfully', {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Slide,
+            });
+            setLoader(false);
+            navigate("/login");
+        } catch (error) {
+            toast.error(error.response.data.message, {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Slide,
+            });
+        } finally {
+            setLoader(false);
         }
-    }
+    };
+
+    let formik = useFormik({
+        initialValues: {
+            userName: "",
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+        },
+        validationSchema,
+        onSubmit: (values) => {
+            handleForm(values);
+        },
+        validateOnChange: false,
+        validateOnBlur: false,
+    });
     return (
         <>
             <section className="vh-100 bg-image overflow-auto p-5"
@@ -99,71 +114,95 @@ export default function Register() {
                                 <div className="card" style={{ borderRadius: 15 }}>
                                     <div className="card-body p-5">
                                         <h2 className="text-uppercase text-center mb-5 header-text">Create an account</h2>
-                                        <form onSubmit={handleSubmit}>
+                                        <form onSubmit={formik.handleSubmit}>
                                             {/* Username Field */}
                                             <div className="form-outline mb-4">
                                                 <label className="form-label" htmlFor="userNameInput" id="userNameHelperLabel">Username</label>
                                                 <input
                                                     type="text"
-                                                    value={user.userName}
-                                                    onChange={handleChange}
+                                                    value={formik.values.userName}
+                                                    onChange={formik.handleChange}
                                                     name="userName"
                                                     id="userNameInput"
                                                     className="form-control form-control-lg fs-6"
                                                     aria-describedby="userNameHelperLabel"
                                                 />
-                                                {errors.userName && <p className="text-danger">{errors.userName}</p>}
+                                                {formik.touched.userName && formik.errors.userName ? (
+                                                    <div className="text-danger">{formik.errors.userName}</div>
+                                                ) : null}
+                                            </div>
+                                            <div className="row form-outline mb-4">
+                                                <div className="col">
+                                                    <label className="form-label" htmlFor="userNameInput" id="userNameHelperLabel">First Name</label>
+                                                    <input
+                                                        type="text"
+                                                        value={formik.values.firstName}
+                                                        onChange={formik.handleChange}
+                                                        placeholder="First Name"
+                                                        name="firstName"
+                                                        id="firstName"
+                                                        className="form-control form-control-lg fs-6"
+                                                    />
+                                                    {formik.touched.firstName && formik.errors.firstName ? (
+                                                        <div className="text-danger">{formik.errors.firstName}</div>
+                                                    ) : null}
+                                                </div>
+                                                <div className="col">
+                                                    <label className="form-label" htmlFor="userNameInput" id="userNameHelperLabel">Last Name</label>
+                                                    <input
+                                                        type="text"
+                                                        value={formik.values.lastName}
+                                                        onChange={formik.handleChange}
+                                                        placeholder="Last Name"
+                                                        name="lastName"
+                                                        id="lastName"
+                                                        className="form-control form-control-lg fs-6"
+                                                    />
+                                                    {formik.touched.lastName && formik.errors.lastName ? (
+                                                        <div className="text-danger">{formik.errors.lastName}</div>
+                                                    ) : null}
+                                                </div>
                                             </div>
                                             {/* Email Field */}
                                             <div className="form-outline mb-4">
                                                 <label className="form-label" htmlFor="emailInput" id="emailHelperLabel">Email</label>
                                                 <input
                                                     type="email"
-                                                    value={user.email}
-                                                    onChange={handleChange}
+                                                    value={formik.values.email}
+                                                    onChange={formik.handleChange}
                                                     id="emailInput"
                                                     name="email"
                                                     className="form-control form-control-lg fs-6"
                                                     placeholder="name@example.com"
                                                     aria-describedby="emailHelperLabel"
                                                 />
-                                                {errors.email && <p className="text-danger">{errors.email}</p>}
+                                                {formik.touched.email && formik.errors.email ? (
+                                                    <div className="text-danger">{formik.errors.email}</div>
+                                                ) : null}
                                             </div>
                                             {/* Password Field */}
                                             <div className="form-outline mb-4">
                                                 <label className="form-label" htmlFor="passwordInput" id="passwordHelperLabel">Password</label>
                                                 <input
                                                     type="password"
-                                                    value={user.password}
-                                                    onChange={handleChange}
+                                                    value={formik.values.password}
+                                                    onChange={formik.handleChange}
                                                     name="password"
                                                     id="passwordInput"
                                                     className="form-control form-control-lg fs-6"
                                                     aria-describedby="passwordHelperLabel"
                                                 />
-                                                {errors.password && <p className="text-danger">{errors.password}</p>}
-                                            </div>
-                                            {/* Confirm Password Field */}
-                                            <div className="form-outline mb-4">
-                                                <label className="form-label" htmlFor="confirmPasswordInput" id="confirmPasswordHelperLabel">Confirm Password</label>
-                                                <input
-                                                    type="password"
-                                                    value={user.confirmPassword}
-                                                    onChange={handleChange}
-                                                    name="confirmPassword"
-                                                    id="confirmPasswordInput"
-                                                    className="form-control form-control-lg fs-6"
-                                                    aria-describedby="confirmPasswordHelperLabel"
-                                                />
-                                                {errors.confirmPassword && <p className="text-danger">{errors.confirmPassword}</p>}
+                                                {formik.touched.password && formik.errors.password ? (
+                                                    <div className="text-danger">{formik.errors.password}</div>
+                                                ) : null}
                                             </div>
                                             {/* Terms and Conditions */}
-                                            <div className="form-check d-flex justify-content-center mb-5">
+                                            {/* <div className="form-check d-flex justify-content-center mb-5">
                                                 <input className="form-check-input me-2" type="checkbox" id="form2Example3cg" />
                                                 <label className="form-check-label" htmlFor="form2Example3cg">
                                                     I agree to all statements in <a href="#!" className="text-body"><u>Terms of service</u></a>
                                                 </label>
-                                            </div>
+                                            </div> */}
                                             {/* Submit Button */}
                                             <div className="d-flex justify-content-center">
                                                 <button type="submit" disabled={loader ? 'disabled' : null} className="btn btn-info btn-block btn-lg gradient-custom-4 text-body">
@@ -171,7 +210,7 @@ export default function Register() {
                                                 </button>
                                             </div>
                                             <p className="text-center text-muted mt-5 mb-0">
-                                                Already have an account? <a href="#!" className="fw-bold text-body"><u>Login here</u></a>
+                                                Already have an account? <Link to="/login" className="fw-bold text-body"><u>Login here</u></Link>
                                             </p>
                                         </form>
                                     </div>

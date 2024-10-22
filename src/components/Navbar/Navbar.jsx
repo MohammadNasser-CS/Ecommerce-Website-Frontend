@@ -15,7 +15,7 @@ export default function Navbar() {
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark" >
         <div className="container">
-          <NavLink className="navbar-brand text-white" to="/">{userData ? userData.userName : 'MyWebsite'}</NavLink>
+          <NavLink className="navbar-brand text-white" to="/">{userData ? userData.given_name : 'E-commerce'}</NavLink>
           {/* Offcanvas toggle button */}
           <button className="navbar-toggler border-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
@@ -42,7 +42,7 @@ export default function Navbar() {
                   </> :
                   <>
                     <li className="nav-item ">
-                      <NavLink className="nav-link text-white" to="/signin">Signin</NavLink>
+                      <NavLink className="nav-link text-white" to="/login">Signin</NavLink>
                     </li>
                     <li className="nav-item">
                       <NavLink className="nav-link text-white" to="/signup">Signup</NavLink>
