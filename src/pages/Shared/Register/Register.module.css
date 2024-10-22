@@ -1,0 +1,42 @@
+/* Extra small devices (portrait phones) */
+@media (max-width: 575.98px) {
+    .register-card {
+        padding: 0.1rem;
+    }
+
+    .header-text {
+        font-size: 1.3rem;
+    }
+
+    .btn-fs {
+        font-size: 1rem !important;
+    }
+}
+
+/* Small devices (landscape phones) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .register-card {
+        padding: 2.5rem;
+    }
+
+    .btn-lg {
+        font-size: 1rem;
+    }
+}
+
+/* Medium devices (tablets) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .register-card {
+        padding: 1.5rem;
+    }
+}
+
+/* Large devices (desktops) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .register-card {
+        padding: 1.5rem;
+    }
+}
+
+/* Extra large devices (large desktops) */
+@media (min-width: 1200px) {}

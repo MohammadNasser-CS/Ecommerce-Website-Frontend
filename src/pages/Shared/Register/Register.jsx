@@ -1,10 +1,10 @@
 import axios from "axios";
-import './Register.css'
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Slide, toast } from "react-toastify";
 import * as Yup from 'yup';
 import { useFormik } from "formik";
+import style from "./Register.module.css"
 export default function Register() {
     const [loader, setLoader] = useState(false);
     const navigate = useNavigate();
@@ -110,10 +110,10 @@ export default function Register() {
                 <div className="mask d-flex align-items-center gradient-custom-3">
                     <div className="container">
                         <div className="row d-flex justify-content-center align-items-center">
-                            <div className="col-12 col-md-9 col-lg-7 col-xl-6 register-card">
+                            <div className={style["register-card"] + " col-12 col-md-9 col-lg-7 col-xl-6"}>
                                 <div className="card" style={{ borderRadius: 15 }}>
                                     <div className="card-body p-5">
-                                        <h2 className="text-uppercase text-center mb-5 header-text">Create an account</h2>
+                                        <h2 className={style["header-text"] + " text-uppercase text-center mb-5"}>Create an account</h2>
                                         <form onSubmit={formik.handleSubmit}>
                                             {/* Username Field */}
                                             <div className="form-outline mb-4">
@@ -205,7 +205,7 @@ export default function Register() {
                                             </div> */}
                                             {/* Submit Button */}
                                             <div className="d-flex justify-content-center">
-                                                <button type="submit" disabled={loader ? 'disabled' : null} className="btn btn-info btn-block btn-lg gradient-custom-4 text-body">
+                                                <button type="submit" disabled={loader ? 'disabled' : null} className={style["btn-fs"] + " btn btn-info btn-block btn-lg gradient-custom-4 text-body"}>
                                                     {loader ? "Wait" : "Register"}
                                                 </button>
                                             </div>

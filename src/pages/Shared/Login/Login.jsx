@@ -1,12 +1,14 @@
 import axios from 'axios';
 import { useFormik } from 'formik';
 import { jwtDecode } from 'jwt-decode';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Slide, toast } from 'react-toastify';
 import * as Yup from 'yup';
-
+import style from "./Login.module.css"
+import { UserContext } from '../../../context/User';
 export default function SignIn() {
+    const { setUserToken,setUserRole } = useContext(UserContext);
     const [loader, setLoader] = useState(false);
     const navigate = useNavigate();
     const validationSchema = Yup.object({
@@ -53,7 +55,8 @@ export default function SignIn() {
             localStorage.setItem("userToken", token)
             localStorage.setItem('userRole', decodedToken.role)
             // localStorage.setItem('role',decodedToken.role)
-
+            setUserToken(token);
+            setUserRole(decodedToken.role);
             if (decodedToken.role === "User")
                 navigate('/')
             else if (decodedToken.role === "Admin")
@@ -100,11 +103,11 @@ export default function SignIn() {
                 }}>
                 <div className="mask d-flex align-items-center gradient-custom-3 h-100">
                     <div className="container">
-                        <div className="row d-flex justify-content-center align-items-center ">
-                            <div className="col-12 col-md-9 col-lg-7 col-xl-6 register-card">
+                        <div className="row d-flex justify-content-center align-items-center">
+                            <div className={style["login-card"] + " col-12 col-md-9 col-lg-7 col-xl-6"}>
                                 <div className="card" style={{ borderRadius: 15 }}>
-                                    <div className="card-body p-5">
-                                        <h2 className="text-uppercase text-center mb-5 header-text">Sign In</h2>
+                                    <div className={"card-body p-5"}>
+                                        <h2 className={style["header-text"] + " text-uppercase text-center mb-5"}>Sign In</h2>
                                         <form onSubmit={formik.handleSubmit}>
                                             <div className="form-outline mb-4">
                                                 <label className="form-label" htmlFor="emailInput" id="emailHelperLabel">Email</label>
@@ -115,7 +118,7 @@ export default function SignIn() {
                                                 <input type="password" value={formik.values.password} onChange={formik.handleChange} name="password" id="passwordInput" className="form-control form-control-lg fs-6" aria-describedby="passwordHelperLabel" />
                                             </div>
                                             <div className="d-flex justify-content-center">
-                                                <button type="submit" disabled={loader ? 'disabled' : null} className="btn btn-info btn-block btn-lg gradient-custom-4 text-body">
+                                                <button type="submit" disabled={loader ? 'disabled' : null} className={style["btn-fs"] + " btn btn-info btn-block btn-lg gradient-custom-4 text-body"}>
                                                     {loader ? "Logging in..." : "Sign In"}
                                                 </button>
                                             </div>
